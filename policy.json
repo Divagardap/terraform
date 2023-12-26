@@ -1,0 +1,224 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "region",
+            "Effect": "Allow",
+            "Action": "ec2:*",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestedRegion": "ap-south-1"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ec2:RunInstances",
+            "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+            "Condition": {
+              "StringEquals": {
+                "ec2:ResourceTag/UserName": "${aws:username}"
+              }
+            }
+          },
+        {
+            "Sid": "size",
+            "Effect": "Allow",
+            "Action": "ec2:RunInstances",
+            "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+            "Condition": {
+                "ForAnyValue:StringNotLike": {
+                    "ec2:InstanceType": "t2.micro"
+                }
+            }
+        },
+        {
+            "Sid": "sizeandinstancelimit",
+            "Effect": "Deny",
+            "Action": "ec2:RunInstances",
+            "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+            "Condition": {
+                "ForAnyValue:StringNotLike": {
+                    "ec2:InstanceType": "t2.micro"
+                }
+            }
+        },
+        {
+            "Sid": "volumesize",
+            "Effect": "Deny",
+            "Action": "ec2:RunInstances",
+            "Resource": "arn:aws:ec2:ap-south-1:*:volume/*",
+            "Condition": {
+                "NumericGreaterThan": {
+                    "ec2:VolumeSize": "10"
+                }
+            }
+      }
+    ]
+}
+
+// {
+//     "Effect": "Deny",
+//     "Action": [
+//         "ec2:CreateTags",
+//         "ec2:DeleteTags"
+//     ],
+//     "Resource": "arn:aws:ec2:ap-south-1:*:instance/*"
+//         }
+//     }
+// }
+//         {
+//             "Effect": "Allow",
+//             "Action": "ec2:RunInstances",
+//             "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//             "Condition": {
+//                 "NumericLessThanEquals": {
+//                     "aws:PrincipalTag/ec2:ResourceTag/InstanceCount": "2"
+//                 }
+//             }
+//         },
+//         {
+//             "Effect": "Allow",
+//             "Action": [
+//                 "ec2:CreateTags",
+//                 "ec2:DescribeInstances"
+//             ],
+//             "Resource": "arn:aws:ec2:ap-south-1:*:instance/*"
+//         },
+//         {
+//             "Effect": "Deny",
+//             "Action": "ec2:RunInstances",
+//             "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//             "Condition": {
+//                 "NumericGreaterThan": {
+//                     "ec2:ResourceTag/OwnerInstanceCount": "2"
+//                 }   
+//             }
+//         }
+//     ]
+// }
+
+// ---------
+// {
+//         {
+//             "Sid": "instancecount",
+//             "Effect": "Allow",
+//             "Action": "ec2:RunInstances",
+//             "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//             "Condition": {
+//                 "NumericLessThanEquals": {
+//                     "aws:PrincipalTag/ec2:InstanceCount": "2"
+//                 }
+//             }
+//         },
+//         {
+//             "Effect": "Allow",
+//             "Action": "ec2:CreateTags",
+//             "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//             "Condition": {
+//                 "StringEquals": {
+//                     "ec2:CreateAction": "RunInstances"
+//                 }
+//             }
+//         }
+// }
+
+
+
+// ---
+// {
+//     "Sid": "instancelimit",
+//     "Effect": "Deny",
+//     "Action": "ec2:RunInstances",
+//     "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//     "Condition": {
+//         "NumericGreaterThan": {
+//             "aws:PrincipalTag/ec2:ResourceTag/InstanceCount": "1"
+//         }
+//     }
+// },
+
+// ---
+//         {
+//             "Effect": "Allow",
+//             "Action": "ec2:RunInstances",
+//             "Resource": "*",
+//             "Condition": {
+//                 "NumericLessThanEquals": {
+//                     "aws:PrincipalTag/ec2:ResourceTag/InstanceCount": "5"
+//                 }
+//             }
+//         },
+//         {
+//             "Effect": "Allow",
+//             "Action": [
+//                 "ec2:CreateTags",
+//                 "ec2:DescribeInstances"
+//             ],
+//             "Resource": "*"
+//         }
+
+// ---
+// {
+//     {
+//         "Sid": "instancecount",
+//         "Effect": "Deny",
+//         "Action": "ec2:RunInstances",
+//         "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//         "Condition": {
+//             "NumericLessThanEquals": {
+//                 "aws:PrincipalTag/ec2:InstanceCount": "2"
+//             }
+//         }
+//     },
+//     {
+//         "Effect": "Allow",
+//         "Action": "ec2:CreateTags",
+//         "Resource": "arn:aws:ec2:ap-south-1:*:instance/*",
+//         "Condition": {
+//             "StringEquals": {
+//                 "ec2:CreateAction": "RunInstances"
+//             }
+//         }
+//     }
+// },
+// ---
+// {
+//     "Statement": [
+//       {
+//         "Effect": "Deny",
+//         "Action": "compute.instance.create",
+//         "Resource": "*",
+//         "Condition": {
+//           "numericLessThanEquals": {
+//             "count": "5",
+//             "operator": "OR",
+//             "attributes": [
+//               "instance:createByUser"
+//             ]
+//           }
+//         }
+//       }
+//     ]
+//   }
+// ---
+// {
+//     "Statement": [
+//       {
+//         "Effect": "Deny",
+//         "Action": "compute.instance.create",
+//         "Resource": "*",
+//         "Condition": {
+//           "numericLessThanEquals": {
+//             "count": "5",
+//             "operator": "OR",
+//             "attributes": [
+//               "instance:createByUser"
+//             ]
+//           }
+//         }
+//       }
+//     ]
+//   }
+  
